@@ -14,8 +14,13 @@
     <div id='root'>
     </div>
     <script type='text/babel'>
-      const API = 'https://acme-users-api-rev.herokuapp.com/api';
 
+    // need button that adds random note,
+    // need button that adds random company
+    // need button that adds random vacation
+    // need hr between each set of info
+
+      const API = 'https://acme-users-api-rev.herokuapp.com/api';
       const fetchUser = async ()=> {
         const storage = window.localStorage;
         const userId = storage.getItem('userId');
@@ -33,6 +38,7 @@
         return  user;
       };
 
+
       class App extends React.Component{
         constructor(){
           super();
@@ -47,8 +53,14 @@
         }
         async componentDidMount(){
           const user = await fetchUser();
+          const companies = (await axios(`${API}/companies`)).data;
+          const vacations = (await axios(`${API}/vacations`)).data;
+          const notes = (await axios(`${API}/notes`)).data;
           this.setState({
-            user
+            user,
+            companies,
+            vactions,
+            notes,
           });
         }
         render(){
