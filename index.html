@@ -60,6 +60,26 @@
               <h1>The Acme Random Life</h1>
               Welcome { user.fullName } to your Random Life!
               <div className='error'>{ error }</div>
+
+            <div className='notes'>
+              <h1> Notes </h1>
+              <button id='randoNote'>Add Random Note</button>
+              <hr />
+            </div>
+
+            <div id='followed'>
+              <h1>Following Companies</h1>
+              <button id='randoFollow'>Add A Random Following Company</button>
+              <hr />
+            </div>
+
+            <div id='vacations'>
+              <h1>Vacations</h1>
+              <button id='randoVacay'>Add Random Vacation</button>
+              <hr />
+            </div>
+
+
             </div>
           );
         }
@@ -68,5 +88,7 @@
       ReactDOM.render(<App />, document.querySelector('#root'));
     </script>
   </body>
+  <!-- post creats, put updates, delete... deletes-->
 </html>
+
 
