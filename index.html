@@ -72,14 +72,6 @@
 
       }
 
-
-
-
-
-
-
-
-
       class App extends React.Component{
         constructor(){
           super();
@@ -137,6 +129,8 @@
               <h1>The Acme Random Life</h1>
               Welcome { user.fullName } to your Random Life!
                <div className='error'>{ error }</div>
+
+
                 <div>
                  <h1> Notes </h1>
                  <Note add = {this.addNote} notes = { notes }/>
