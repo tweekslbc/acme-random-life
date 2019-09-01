@@ -62,6 +62,7 @@
               return(
                 <div>
                  { note.newNote }
+                  <h3> This is a new note</h3>
                  <button>Destroy</button>
                 </div>
               )
@@ -102,7 +103,7 @@
         addNote = async() => {
           console.log("I am a note");
           const newNote= 'I am a note';
-          const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { newNote })).data;
+          const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { archived:false, text: newNote })).data;
           const notes = [...this.state.notes, note]
           this.setState({ notes })
         }
