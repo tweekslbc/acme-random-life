@@ -102,8 +102,8 @@
 
         addNote = async() => {
           console.log("I am a note");
-          const newNote= 'I am a note';
-          const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { archived:false, text: newNote })).data;
+          const newNote= 'I am a new note';
+          const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { archived:true, text: newNote })).data;
           const notes = [...this.state.notes, note]
           this.setState({ notes })
         }
@@ -140,7 +140,7 @@
 
                 <div>
                  <h1> Notes </h1>
-                 <Note add = {this.addNote} notes = { notes }/>
+                 <Note add = {this.addNote} destroy = {this.destroyNote} notes = { notes }/>
                  <hr />
                 </div>
 
