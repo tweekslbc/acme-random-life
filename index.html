@@ -36,24 +36,49 @@
       const Vacation = (props) => {
         return(
           <div>
-          <button onClick= { props.add }> Add A Random Vacation </button>
-          {
-            props.vacations.map(vacation => {
+             <button onClick= { props.add }> Add A Random Vacation </button>
+            {
+              props.vacations.map(vacation => {
               return(
                 <div>
                  { vacation.startDate } to { vacation.endDate}
                  <button onClick= { () => props.destroy( vacation.id ) }>Destroy</button>
                 </div>
               )
-
             } )
-
-
           }
           </div>
         )
 
       }
+
+
+      const Note = (props) => {
+        return(
+          <div>
+             <button onClick= { props.add }> Add A Random Note </button>
+            {
+              props.notes.map(note => {
+              return(
+                <div>
+                 { note.newNote }
+                 <button>Destroy</button>
+                </div>
+              )
+            } )
+          }
+          </div>
+        )
+
+      }
+
+
+
+
+
+
+
+
 
       class App extends React.Component{
         constructor(){
@@ -78,22 +103,29 @@
             companies,
             notes,
             vacations
-
           });
           console.log(this.state)
         }
 
-       add = async() => {
-         console.log('hello world');
+        addNote = async() => {
+          console.log("I am a note");
+          const newNote= 'I am a note';
+          const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { newNote })).data;
+          const notes = [...this.state.notes, note]
+          this.setState({ notes })
+        }
+
+
+
+       addVacation = async() => {
          const startDate = moment('10/31/2019').format('MM/DD/YYYY');
          const endDate = moment('12/21/2019').format('MM/DD/YYYY');
-         console.log(startDate);
          const vacation = (await axios.post(`${ API }/users/${ this.state.user.id }/vacations`, { startDate, endDate })).data;
          const vacations = [...this.state.vacations, vacation]
          this.setState({ vacations })
        }
 
-       destroy = async(id)=> {
+       destroyVacation = async(id)=> {
          await axios.delete(`${ API }/users/${ this.state.user.id }/vacations/${id}`)
          const destroying = [...this.state.vacations].filter(vacation => vacation.id !== id)
          this.setState({ vacations : destroying })
@@ -104,9 +136,23 @@
             <div>
               <h1>The Acme Random Life</h1>
               Welcome { user.fullName } to your Random Life!
-              <div className='error'>{ error }</div>
-              <Vacation add = {this.add} destroy = {this.destroy} vacations = { vacations}/>
+               <div className='error'>{ error }</div>
+                <div>
+                 <h1> Notes </h1>
+                 <Note add = {this.addNote} notes = { notes }/>
+                 <hr />
+                </div>
 
+                <div>
+                  <h1> Following Companies </h1>
+                  <hr />
+                </div>
+
+                <div>
+                  <h1> Vacations </h1>
+                  <Vacation add = {this.addVacation} destroy = {this.destroyVacation} vacations = { vacations}/>
+                  <hr />
+                </div>
             </div>
           );
         }
