@@ -33,6 +33,28 @@
         return  user;
       };
 
+      const Vacation = (props) => {
+        return(
+          <div>
+          <button onClick= { props.add }> Add A Random Vacation </button>
+          {
+            props.vacations.map(vacation => {
+              return(
+                <div>
+                 { vacation.startDate } to { vacation.endDate}
+                 <button onClick= { () => props.destroy( vacation.id ) }>Destroy</button>
+                </div>
+              )
+
+            } )
+
+
+          }
+          </div>
+        )
+
+      }
+
       class App extends React.Component{
         constructor(){
           super();
@@ -47,12 +69,35 @@
         }
         async componentDidMount(){
           const user = await fetchUser();
-          const companies = await axios.get(`${API}/companies`);
+          const companies = (await axios.get(`${API}/users/${user.id}/followingCompanies`)).data;
+          const notes = (await axios.get(`${API}/users/${user.id}/notes`)).data;
+          const vacations = (await axios.get(`${API}/users/${user.id}/vacations`)).data;
           console.log(user);
           this.setState({
-            user
+            user,
+            companies,
+            notes,
+            vacations
+
           });
+          console.log(this.state)
         }
+
+       add = async() => {
+         console.log('hello world');
+         const startDate = moment('10/31/2019').format('MM/DD/YYYY');
+         const endDate = moment('12/21/2019').format('MM/DD/YYYY');
+         console.log(startDate);
+         const vacation = (await axios.post(`${ API }/users/${ this.state.user.id }/vacations`, { startDate, endDate })).data;
+         const vacations = [...this.state.vacations, vacation]
+         this.setState({ vacations })
+       }
+
+       destroy = async(id)=> {
+         await axios.delete(`${ API }/users/${ this.state.user.id }/vacations/${id}`)
+         const destroying = [...this.state.vacations].filter(vacation => vacation.id !== id)
+         this.setState({ vacations : destroying })
+       }
         render(){
           const { error, user, companies, vacations, followingCompanies, notes } = this.state;
           return (
@@ -60,25 +105,7 @@
               <h1>The Acme Random Life</h1>
               Welcome { user.fullName } to your Random Life!
               <div className='error'>{ error }</div>
-
-            <div className='notes'>
-              <h1> Notes </h1>
-              <button id='randoNote'>Add A Random Note</button>
-              <hr />
-            </div>
-
-            <div id='followed'>
-              <h1>Following Companies</h1>
-              <button id='randoFollow'>Add A Random Following Company</button>
-              <hr />
-            </div>
-
-            <div id='vacations'>
-              <h1>Vacations</h1>
-              <button id='randoVacay'>Add A Random Vacation</button>
-              <hr />
-            </div>
-
+              <Vacation add = {this.add} destroy = {this.destroy} vacations = { vacations}/>
 
             </div>
           );
