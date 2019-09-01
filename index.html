@@ -62,8 +62,8 @@
               return(
                 <div>
                  { note.newNote }
-                  <h3> This is a new note</h3>
-                 <button>Destroy</button>
+                  <h3> This is a new note </h3>
+                 <button onClick= { () => props.destroy( note.id ) }>Destroy</button>
                 </div>
               )
             } )
@@ -106,6 +106,12 @@
           const note = (await axios.post(`${API}/users/${ this.state.user.id }/notes`, { archived:false, text: newNote })).data;
           const notes = [...this.state.notes, note]
           this.setState({ notes })
+        }
+
+        destroyNote = async(id)=> {
+          await axios.delete(`${ API }/users/${ this.state.user.id }/notes/${id}`)
+          const destroying = [...this.state.notes].filter(note => note.id !== id)
+          this.setState({ notes: destroying })
         }
 
 
