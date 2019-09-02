@@ -138,7 +138,7 @@
 
         addCompany = async()=> {
 
-          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId:  })).data;
+          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId: companies.id })).data;
           const companies = [...this.state.companies, company]
           this.setState({ companies })
         }
