@@ -1,19 +1,22 @@
 <html>
   <head>
-  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js'></script>
-  <style>
-  </style>
-
+    <script
+      src="https://unpkg.com/react@16/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
+    <style></style>
   </head>
   <body>
-    <div id='root'>
-    </div>
-    <script type='text/babel'>
+    <div id="root"></div>
+    <script type="text/babel">
       const API = 'https://acme-users-api-rev.herokuapp.com/api';
 
       const fetchUser = async ()=> {
@@ -49,7 +52,6 @@
           }
           </div>
         )
-
       }
 
 
@@ -64,6 +66,26 @@
                  { note.newNote }
                   <h3> This is a new note </h3>
                  <button onClick= { () => props.destroy( note.id ) }>Destroy</button>
+                </div>
+              )
+            } )
+          }
+          </div>
+        )
+      }
+
+
+      const Company = (props) => {
+        return(
+          <div>
+             <button onClick= { props.add }> Add A Following Company </button>
+            {
+              props.companies.map(company => {
+              return(
+                <div>
+                 { company.newCompany }
+                 <h3> New Company </h3>
+                 <button onClick= { () => props.destroy( company.id ) }>Destroy</button>
                 </div>
               )
             } )
@@ -114,6 +136,19 @@
           this.setState({ notes: destroying })
         }
 
+        addCompany = async()=> {
+
+          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId:  })).data;
+          const companies = [...this.state.companies, company]
+          this.setState({ companies })
+        }
+
+        destroyCompany = async(id)=> {
+          await axios.delete(`${ API }/users/${ this.state.user.id }/followingCompanies/${id}`)
+          const destroying = [...this.state.companies].filter(company => company.id !== id)
+          this.setState({ companies: destroying})
+        }
+
 
 
        addVacation = async() => {
@@ -146,6 +181,7 @@
 
                 <div>
                   <h1> Following Companies </h1>
+                  <Company add = {this.addCompany} destroy = {this.destroyCompany} companies = { companies }/>
                   <hr />
                 </div>
 
@@ -166,5 +202,3 @@
 need button to add random events
   -->
 </html>
-
-
