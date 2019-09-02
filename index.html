@@ -136,12 +136,12 @@
           this.setState({ notes: destroying })
         }
 
-        addCompany = async()=> {
-
-          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId: companies.id })).data;
+        addCompany = async(comp)=> {
+          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId: comp.id })).data;
           const companies = [...this.state.companies, company]
           this.setState({ companies })
         }
+
 
         destroyCompany = async(id)=> {
           await axios.delete(`${ API }/users/${ this.state.user.id }/followingCompanies/${id}`)
