@@ -201,5 +201,16 @@
   </body>
   <!-- post creats, put updates, delete... deletes
 need button to add random events
+
+
+function randomDate(start, end) {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const randomTime = (endDate.getTime() - startDate.getTime()) * Math.random();
+  return new Date(startDate.getTime() + randomTime);
+}
+console.log(randomDate('01-01-2000', '12-31-2020'));
+
+
   -->
 </html>
