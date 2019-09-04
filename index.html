@@ -43,7 +43,7 @@
             {
               props.vacations.map(vacation => {
               return(
-                <div>
+                <div key= {vacation.id}>
                  { vacation.startDate } to { vacation.endDate}
                  <button onClick= { () => props.destroy( vacation.id ) }>Destroy</button>
                 </div>
@@ -62,9 +62,9 @@
             {
               props.notes.map(note => {
               return(
-                <div>
-                 { note.newNote }
-                  <h3> This is a new note </h3>
+                <div key = {note.id}>
+                 { note.text }
+                  <h3> This Is A Note </h3>
                  <button onClick= { () => props.destroy( note.id ) }>Destroy</button>
                 </div>
               )
@@ -81,9 +81,11 @@
              <button onClick= { props.add }> Add A Following Company </button>
             {
               props.companies.map(company => {
+               const Comps = props.allCompanies.find( _company =>  _company.id === company.companyId
+                )
               return(
-                <div>
-                 { company.newCompany }
+                <div key = {company.id}>
+                  { Comps.name  }
                  <h3> New Company </h3>
                  <button onClick= { () => props.destroy( company.id ) }>Destroy</button>
                 </div>
@@ -112,12 +114,14 @@
           const companies = (await axios.get(`${API}/users/${user.id}/followingCompanies`)).data;
           const notes = (await axios.get(`${API}/users/${user.id}/notes`)).data;
           const vacations = (await axios.get(`${API}/users/${user.id}/vacations`)).data;
+          const allCompanies = (await axios.get(`${API}/companies`)).data;
           console.log(user);
           this.setState({
             user,
             companies,
             notes,
-            vacations
+            vacations,
+            allCompanies
           });
           console.log(this.state)
         }
@@ -136,9 +140,11 @@
           this.setState({ notes: destroying })
         }
 
-        addCompany = async(comp)=> {
+        addCompany = async()=> {
           console.log('i am a company');
-          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId: comp.id })).data;
+          const randoCompany = (await axios.get(`https://acme-users-api-rev.herokuapp.com/api/companies/random`)).data;
+
+          const company = (await axios.post(`${API}/users/${ this.state.user.id }/followingCompanies`, { rating: 3, companyId: randoCompany.id })).data;
           const companies = [...this.state.companies, company]
           this.setState({ companies })
         }
@@ -166,7 +172,7 @@
          this.setState({ vacations : destroying })
        }
         render(){
-          const { error, user, companies, vacations, followingCompanies, notes } = this.state;
+          const { error, user, companies, vacations, followingCompanies, notes, allCompanies } = this.state;
           return (
             <div>
               <h1>The Acme Random Life</h1>
@@ -182,7 +188,7 @@
 
                 <div>
                   <h1> Following Companies </h1>
-                  <Company add = {this.addCompany} destroy = {this.destroyCompany} companies = { companies }/>
+                  <Company add = {this.addCompany} destroy = {this.destroyCompany} allCompanies ={ allCompanies } companies = { companies }/>
                   <hr />
                 </div>
 
